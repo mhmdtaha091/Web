@@ -12,7 +12,6 @@
             background-color: #f0f2f5; 
         }
 
-        
         .alkali-metal { background-color: #ffcdd2; border-color: #e57373; }
         .alkaline-earth-metal { background-color: #ffecb3; border-color: #ffd54f; }
         .transition-metal { background-color: #bbdefb; border-color: #64b5f6; }
@@ -29,15 +28,20 @@
             will-change: transform;
             border-width: 1px;
             border-bottom-width: 3px;
+            /* Ensure elements can shrink and have content centered */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            aspect-ratio: 1 / 1; /* Keep elements square */
         }
 
         .element:hover {
-            transform: scale(1.1) translateY(-4px);
+            transform: scale(1.2); /* Increased scale for better visibility on small screens */
             z-index: 10;
             box-shadow: 0 8px 25px rgba(0,0,0,0.15);
         }
 
-        
         #tooltip {
             position: absolute;
             background: white;
@@ -49,33 +53,37 @@
             max-width: 240px;
             pointer-events: none; 
         }
+
+        /* This is the key change for responsiveness without scrolling */
+        #table {
+            display: grid;
+            grid-template-columns: repeat(18, minmax(0, 1fr));
+        }
     </style>
 </head>
-<body class="bg-gray-50 min-h-screen flex items-center justify-center p-4">
+<body class="bg-gray-50 min-h-screen flex items-center justify-center p-2 sm:p-4">
     <div class="w-full max-w-7xl">
-        <header class="text-center mb-8">
-            <h1 class="text-4xl md:text-5xl font-bold text-gray-800">The Periodic Table</h1>
-            
+        <header class="text-center mb-4 sm:mb-8">
+            <h1 class="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-800">The Periodic Table</h1>
         </header>
 
         <main class="w-full">
-            <div class="overflow-x-auto pb-4">
-                <div id="table" class="grid grid-cols-18 gap-0.5 sm:gap-1 relative" style="width: fit-content; margin: auto;"></div>
-            </div>
+            <!-- The scrolling wrapper is removed -->
+            <div id="table" class="gap-px sm:gap-1 relative"></div>
         </main>
 
         <!-- Legend -->
-        <footer class="mt-8">
-             <div class="flex flex-wrap justify-center items-center gap-x-4 gap-y-2 max-w-4xl mx-auto">
-                <div class="flex items-center"><div class="w-4 h-4 rounded-sm mr-2 alkali-metal"></div><span class="text-sm text-gray-700">Alkali Metal</span></div>
-                <div class="flex items-center"><div class="w-4 h-4 rounded-sm mr-2 alkaline-earth-metal"></div><span class="text-sm text-gray-700">Alkaline Earth</span></div>
-                <div class="flex items-center"><div class="w-4 h-4 rounded-sm mr-2 transition-metal"></div><span class="text-sm text-gray-700">Transition Metal</span></div>
-                <div class="flex items-center"><div class="w-4 h-4 rounded-sm mr-2 post-transition-metal"></div><span class="text-sm text-gray-700">Post-Transition</span></div>
-                <div class="flex items-center"><div class="w-4 h-4 rounded-sm mr-2 metalloid"></div><span class="text-sm text-gray-700">Metalloid</span></div>
-                <div class="flex items-center"><div class="w-4 h-4 rounded-sm mr-2 nonmetal"></div><span class="text-sm text-gray-700">Nonmetal</span></div>
-                <div class="flex items-center"><div class="w-4 h-4 rounded-sm mr-2 noble-gas"></div><span class="text-sm text-gray-700">Noble Gas</span></div>
-                <div class="flex items-center"><div class="w-4 h-4 rounded-sm mr-2 lanthanoid"></div><span class="text-sm text-gray-700">Lanthanoid</span></div>
-                <div class="flex items-center"><div class="w-4 h-4 rounded-sm mr-2 actinoid"></div><span class="text-sm text-gray-700">Actinoid</span></div>
+        <footer class="mt-4 sm:mt-8">
+             <div class="flex flex-wrap justify-center items-center gap-x-3 gap-y-2 sm:gap-x-4 max-w-4xl mx-auto">
+                <div class="flex items-center"><div class="w-3 h-3 sm:w-4 sm:h-4 rounded-sm mr-2 alkali-metal"></div><span class="text-xs sm:text-sm text-gray-700">Alkali Metal</span></div>
+                <div class="flex items-center"><div class="w-3 h-3 sm:w-4 sm:h-4 rounded-sm mr-2 alkaline-earth-metal"></div><span class="text-xs sm:text-sm text-gray-700">Alkaline Earth</span></div>
+                <div class="flex items-center"><div class="w-3 h-3 sm:w-4 sm:h-4 rounded-sm mr-2 transition-metal"></div><span class="text-xs sm:text-sm text-gray-700">Transition Metal</span></div>
+                <div class="flex items-center"><div class="w-3 h-3 sm:w-4 sm:h-4 rounded-sm mr-2 post-transition-metal"></div><span class="text-xs sm:text-sm text-gray-700">Post-Transition</span></div>
+                <div class="flex items-center"><div class="w-3 h-3 sm:w-4 sm:h-4 rounded-sm mr-2 metalloid"></div><span class="text-xs sm:text-sm text-gray-700">Metalloid</span></div>
+                <div class="flex items-center"><div class="w-3 h-3 sm:w-4 sm:h-4 rounded-sm mr-2 nonmetal"></div><span class="text-xs sm:text-sm text-gray-700">Nonmetal</span></div>
+                <div class="flex items-center"><div class="w-3 h-3 sm:w-4 sm:h-4 rounded-sm mr-2 noble-gas"></div><span class="text-xs sm:text-sm text-gray-700">Noble Gas</span></div>
+                <div class="flex items-center"><div class="w-3 h-3 sm:w-4 sm:h-4 rounded-sm mr-2 lanthanoid"></div><span class="text-xs sm:text-sm text-gray-700">Lanthanoid</span></div>
+                <div class="flex items-center"><div class="w-3 h-3 sm:w-4 sm:h-4 rounded-sm mr-2 actinoid"></div><span class="text-xs sm:text-sm text-gray-700">Actinoid</span></div>
             </div>
         </footer>
     </div>
@@ -223,13 +231,14 @@
         elements.forEach(el => {
             const div = document.createElement("div");
             
-            div.className = `element p-0.5 sm:p-1 md:p-2 rounded-md text-center cursor-pointer text-gray-800 ${categories[el.category] || 'unknown'}`;
+            div.className = `element p-px rounded-sm sm:rounded-md text-center cursor-pointer text-gray-800 ${categories[el.category] || 'unknown'}`;
             div.style.gridColumn = el.xpos;
             div.style.gridRow = el.ypos;
+            // Responsive text sizes are adjusted to work better on small screens
             div.innerHTML = `
-                <div class="text-[9px] sm:text-xs font-medium text-gray-600">${el.number}</div>
-                <div class="text-base sm:text-lg md:text-xl font-bold">${el.symbol}</div>
-                <div class="text-[8px] sm:text-[10px] md:text-xs truncate">${el.name}</div>
+                <div class="text-[0.5rem] sm:text-xs font-medium text-gray-600">${el.number}</div>
+                <div class="text-[0.6rem] sm:text-lg md:text-xl font-bold">${el.symbol}</div>
+                <div class="text-[0.4rem] sm:text-[10px] md:text-xs truncate w-full px-1">${el.name}</div>
             `;
 
             div.addEventListener("mouseenter", e => {
@@ -242,7 +251,6 @@
             });
 
             div.addEventListener("mousemove", e => {
-                
                 tooltip.style.left = e.pageX + 15 + "px";
                 tooltip.style.top = e.pageY + 15 + "px";
             });
