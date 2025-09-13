@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Periodic Table</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f2f5; 
+        }
+
+        
+        .alkali-metal { background-color: #ffcdd2; border-color: #e57373; }
+        .alkaline-earth-metal { background-color: #ffecb3; border-color: #ffd54f; }
+        .transition-metal { background-color: #bbdefb; border-color: #64b5f6; }
+        .post-transition-metal { background-color: #c8e6c9; border-color: #81c784; }
+        .metalloid { background-color: #d1c4e9; border-color: #9575cd; }
+        .nonmetal { background-color: #b2ebf2; border-color: #4dd0e1; }
+        .noble-gas { background-color: #e1bee7; border-color: #ba68c8; }
+        .lanthanoid { background-color: #f0f4c3; border-color: #dce775; }
+        .actinoid { background-color: #d7ccc8; border-color: #a1887f; }
+        .unknown { background-color: #e0e0e0; border-color: #9e9e9e; }
+        
+        .element {
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+            will-change: transform;
+            border-width: 1px;
+            border-bottom-width: 3px;
+        }
+
+        .element:hover {
+            transform: scale(1.1) translateY(-4px);
+            z-index: 10;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        
+        #tooltip {
+            position: absolute;
+            background: white;
+            border-radius: 8px;
+            padding: 12px 16px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            display: none;
+            z-index: 50;
+            max-width: 240px;
+            pointer-events: none; 
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen flex items-center justify-center p-4">
+    <div class="w-full max-w-7xl">
+        <header class="text-center mb-8">
+            <h1 class="text-4xl md:text-5xl font-bold text-gray-800">The Periodic Table</h1>
+            
+        </header>
+
+        <main class="w-full">
+            <div class="overflow-x-auto pb-4">
+                <div id="table" class="grid grid-cols-18 gap-0.5 sm:gap-1 relative" style="width: fit-content; margin: auto;"></div>
+            </div>
+        </main>
+
+        <!-- Legend -->
+        <footer class="mt-8">
+             <div class="flex flex-wrap justify-center items-center gap-x-4 gap-y-2 max-w-4xl mx-auto">
+                <div class="flex items-center"><div class="w-4 h-4 rounded-sm mr-2 alkali-metal"></div><span class="text-sm text-gray-700">Alkali Metal</span></div>
+                <div class="flex items-center"><div class="w-4 h-4 rounded-sm mr-2 alkaline-earth-metal"></div><span class="text-sm text-gray-700">Alkaline Earth</span></div>
+                <div class="flex items-center"><div class="w-4 h-4 rounded-sm mr-2 transition-metal"></div><span class="text-sm text-gray-700">Transition Metal</span></div>
+                <div class="flex items-center"><div class="w-4 h-4 rounded-sm mr-2 post-transition-metal"></div><span class="text-sm text-gray-700">Post-Transition</span></div>
+                <div class="flex items-center"><div class="w-4 h-4 rounded-sm mr-2 metalloid"></div><span class="text-sm text-gray-700">Metalloid</span></div>
+                <div class="flex items-center"><div class="w-4 h-4 rounded-sm mr-2 nonmetal"></div><span class="text-sm text-gray-700">Nonmetal</span></div>
+                <div class="flex items-center"><div class="w-4 h-4 rounded-sm mr-2 noble-gas"></div><span class="text-sm text-gray-700">Noble Gas</span></div>
+                <div class="flex items-center"><div class="w-4 h-4 rounded-sm mr-2 lanthanoid"></div><span class="text-sm text-gray-700">Lanthanoid</span></div>
+                <div class="flex items-center"><div class="w-4 h-4 rounded-sm mr-2 actinoid"></div><span class="text-sm text-gray-700">Actinoid</span></div>
+            </div>
+        </footer>
+    </div>
+    
+    <div id="tooltip"></div>
+
+    <script>
+        const categories = {
+            "alkali metal": "alkali-metal",
+            "alkaline earth metal": "alkaline-earth-metal",
+            "transition metal": "transition-metal",
+            "post-transition metal": "post-transition-metal",
+            "metalloid": "metalloid",
+            "nonmetal": "nonmetal",
+            "noble gas": "noble-gas",
+            "lanthanoid": "lanthanoid",
+            "actinoid": "actinoid",
+            "unknown": "unknown"
+        };
+
+        const elements = [
+            {number:1,symbol:"H",name:"Hydrogen",category:"nonmetal",xpos:1,ypos:1,description:"Lightest element, forms water, essential for life."},
+            {number:2,symbol:"He",name:"Helium",category:"noble gas",xpos:18,ypos:1,description:"Inert noble gas, used in balloons and cooling."},
+            {number:3,symbol:"Li",name:"Lithium",category:"alkali metal",xpos:1,ypos:2,description:"Soft alkali metal, used in batteries."},
+            {number:4,symbol:"Be",name:"Beryllium",category:"alkaline earth metal",xpos:2,ypos:2,description:"Lightweight metal, used in aerospace, toxic."},
+            {number:5,symbol:"B",name:"Boron",category:"metalloid",xpos:13,ypos:2,description:"Metalloid, used in glass and detergents."},
+            {number:6,symbol:"C",name:"Carbon",category:"nonmetal",xpos:14,ypos:2,description:"Basis of organic life, forms graphite and diamond."},
+            {number:7,symbol:"N",name:"Nitrogen",category:"nonmetal",xpos:15,ypos:2,description:"78% of atmosphere, used in fertilizers."},
+            {number:8,symbol:"O",name:"Oxygen",category:"nonmetal",xpos:16,ypos:2,description:"Essential for respiration and combustion."},
+            {number:9,symbol:"F",name:"Fluorine",category:"nonmetal",xpos:17,ypos:2,description:"Most reactive halogen, used in toothpaste and Teflon."},
+            {number:10,symbol:"Ne",name:"Neon",category:"noble gas",xpos:18,ypos:2,description:"Inert noble gas, famous for neon lighting."},
+            {number:11,symbol:"Na",name:"Sodium",category:"alkali metal",xpos:1,ypos:3,description:"Highly reactive, found in table salt."},
+            {number:12,symbol:"Mg",name:"Magnesium",category:"alkaline earth metal",xpos:2,ypos:3,description:"Light metal, used in alloys and fireworks."},
+            {number:13,symbol:"Al",name:"Aluminium",category:"post-transition metal",xpos:13,ypos:3,description:"Lightweight, corrosion-resistant metal, widely used."},
+            {number:14,symbol:"Si",name:"Silicon",category:"metalloid",xpos:14,ypos:3,description:"Semiconductor, essential in electronics and computers."},
+            {number:15,symbol:"P",name:"Phosphorus",category:"nonmetal",xpos:15,ypos:3,description:"Important for DNA, fertilizers, and matches."},
+            {number:16,symbol:"S",name:"Sulfur",category:"nonmetal",xpos:16,ypos:3,description:"Yellow solid, used in sulfuric acid production."},
+            {number:17,symbol:"Cl",name:"Chlorine",category:"nonmetal",xpos:17,ypos:3,description:"Greenish gas, disinfectant, part of table salt."},
+            {number:18,symbol:"Ar",name:"Argon",category:"noble gas",xpos:18,ypos:3,description:"Inert noble gas, used in welding and bulbs."},
+            {number:19,symbol:"K",name:"Potassium",category:"alkali metal",xpos:1,ypos:4,description:"Reactive alkali metal, essential for nerve function."},
+            {number:20,symbol:"Ca",name:"Calcium",category:"alkaline earth metal",xpos:2,ypos:4,description:"Essential for bones and teeth."},
+            {number:21,symbol:"Sc",name:"Scandium",category:"transition metal",xpos:3,ypos:4,description:"Light metal, used in aerospace alloys."},
+            {number:22,symbol:"Ti",name:"Titanium",category:"transition metal",xpos:4,ypos:4,description:"Strong, corrosion-resistant, used in implants."},
+            {number:23,symbol:"V",name:"Vanadium",category:"transition metal",xpos:5,ypos:4,description:"Used in steel alloys for strength."},
+            {number:24,symbol:"Cr",name:"Chromium",category:"transition metal",xpos:6,ypos:4,description:"Shiny metal, used in stainless steel and plating."},
+            {number:25,symbol:"Mn",name:"Manganese",category:"transition metal",xpos:7,ypos:4,description:"Used in steelmaking and batteries."},
+            {number:26,symbol:"Fe",name:"Iron",category:"transition metal",xpos:8,ypos:4,description:"Essential metal, core of hemoglobin, used in steel."},
+            {number:27,symbol:"Co",name:"Cobalt",category:"transition metal",xpos:9,ypos:4,description:"Used in alloys and rechargeable batteries."},
+            {number:28,symbol:"Ni",name:"Nickel",category:"transition metal",xpos:10,ypos:4,description:"Corrosion-resistant metal, used in coins and alloys."},
+            {number:29,symbol:"Cu",name:"Copper",category:"transition metal",xpos:11,ypos:4,description:"Conductive metal, used in wiring and coins."},
+            {number:30,symbol:"Zn",name:"Zinc",category:"transition metal",xpos:12,ypos:4,description:"Used in galvanizing and alloys like brass."},
+            {number:31,symbol:"Ga",name:"Gallium",category:"post-transition metal",xpos:13,ypos:4,description:"Metal that melts in hand, used in electronics."},
+            {number:32,symbol:"Ge",name:"Germanium",category:"metalloid",xpos:14,ypos:4,description:"Semiconductor used in electronics and optics."},
+            {number:33,symbol:"As",name:"Arsenic",category:"metalloid",xpos:15,ypos:4,description:"Toxic metalloid, historically used in poisons."},
+            {number:34,symbol:"Se",name:"Selenium",category:"nonmetal",xpos:16,ypos:4,description:"Used in photocells and glassmaking."},
+            {number:35,symbol:"Br",name:"Bromine",category:"nonmetal",xpos:17,ypos:4,description:"Reddish liquid halogen, used in flame retardants."},
+            {number:36,symbol:"Kr",name:"Krypton",category:"noble gas",xpos:18,ypos:4,description:"Noble gas used in lighting and lasers."},
+            {number:37,symbol:"Rb",name:"Rubidium",category:"alkali metal",xpos:1,ypos:5,description:"Very reactive alkali metal, used in research."},
+            {number:38,symbol:"Sr",name:"Strontium",category:"alkaline earth metal",xpos:2,ypos:5,description:"Used in fireworks for red color."},
+            {number:39,symbol:"Y",name:"Yttrium",category:"transition metal",xpos:3,ypos:5,description:"Used in LEDs and phosphors."},
+            {number:40,symbol:"Zr",name:"Zirconium",category:"transition metal",xpos:4,ypos:5,description:"Corrosion-resistant, used in nuclear reactors."},
+            {number:41,symbol:"Nb",name:"Niobium",category:"transition metal",xpos:5,ypos:5,description:"Used in superconductors and steel alloys."},
+            {number:42,symbol:"Mo",name:"Molybdenum",category:"transition metal",xpos:6,ypos:5,description:"Used in steel alloys and enzymes."},
+            {number:43,symbol:"Tc",name:"Technetium",category:"transition metal",xpos:7,ypos:5,description:"First artificial element, used in medical imaging."},
+            {number:44,symbol:"Ru",name:"Ruthenium",category:"transition metal",xpos:8,ypos:5,description:"Used in electronics and alloys."},
+            {number:45,symbol:"Rh",name:"Rhodium",category:"transition metal",xpos:9,ypos:5,description:"Used in catalytic converters and jewelry."},
+            {number:46,symbol:"Pd",name:"Palladium",category:"transition metal",xpos:10,ypos:5,description:"Used in catalytic converters and electronics."},
+            {number:47,symbol:"Ag",name:"Silver",category:"transition metal",xpos:11,ypos:5,description:"Precious metal, highly conductive, used in jewelry."},
+            {number:48,symbol:"Cd",name:"Cadmium",category:"transition metal",xpos:12,ypos:5,description:"Toxic metal, used in batteries and pigments."},
+            {number:49,symbol:"In",name:"Indium",category:"post-transition metal",xpos:13,ypos:5,description:"Soft metal, used in touchscreens and alloys."},
+            {number:50,symbol:"Sn",name:"Tin",category:"post-transition metal",xpos:14,ypos:5,description:"Used in solder and alloys like bronze."},
+            {number:51,symbol:"Sb",name:"Antimony",category:"metalloid",xpos:15,ypos:5,description:"Used in flame retardants and alloys."},
+            {number:52,symbol:"Te",name:"Tellurium",category:"metalloid",xpos:16,ypos:5,description:"Used in alloys and semiconductors."},
+            {number:53,symbol:"I",name:"Iodine",category:"nonmetal",xpos:17,ypos:5,description:"Essential nutrient, used as antiseptic."},
+            {number:54,symbol:"Xe",name:"Xenon",category:"noble gas",xpos:18,ypos:5,description:"Used in lamps and anesthesia."},
+            {number:55,symbol:"Cs",name:"Cesium",category:"alkali metal",xpos:1,ypos:6,description:"Highly reactive, used in atomic clocks."},
+            {number:56,symbol:"Ba",name:"Barium",category:"alkaline earth metal",xpos:2,ypos:6,description:"Used in medical imaging and fireworks."},
+            {number:57,symbol:"La",name:"Lanthanum",category:"lanthanoid",xpos:3,ypos:9,description:"Soft metal, used in optics and batteries."},
+            {number:58,symbol:"Ce",name:"Cerium",category:"lanthanoid",xpos:4,ypos:9,description:"Used in catalysts and glass polishing."},
+            {number:59,symbol:"Pr",name:"Praseodymium",category:"lanthanoid",xpos:5,ypos:9,description:"Used in magnets and alloys."},
+            {number:60,symbol:"Nd",name:"Neodymium",category:"lanthanoid",xpos:6,ypos:9,description:"Used in strong permanent magnets."},
+            {number:61,symbol:"Pm",name:"Promethium",category:"lanthanoid",xpos:7,ypos:9,description:"Radioactive, used in luminous paint."},
+            {number:62,symbol:"Sm",name:"Samarium",category:"lanthanoid",xpos:8,ypos:9,description:"Used in magnets and nuclear reactors."},
+            {number:63,symbol:"Eu",name:"Europium",category:"lanthanoid",xpos:9,ypos:9,description:"Used in red phosphors for screens."},
+            {number:64,symbol:"Gd",name:"Gadolinium",category:"lanthanoid",xpos:10,ypos:9,description:"Used in MRI contrast agents."},
+            {number:65,symbol:"Tb",name:"Terbium",category:"lanthanoid",xpos:11,ypos:9,description:"Used in phosphors and alloys."},
+            {number:66,symbol:"Dy",name:"Dysprosium",category:"lanthanoid",xpos:12,ypos:9,description:"Used in magnets and lasers."},
+            {number:67,symbol:"Ho",name:"Holmium",category:"lanthanoid",xpos:13,ypos:9,description:"Used in lasers and magnets."},
+            {number:68,symbol:"Er",name:"Erbium",category:"lanthanoid",xpos:14,ypos:9,description:"Used in fiber optics and lasers."},
+            {number:69,symbol:"Tm",name:"Thulium",category:"lanthanoid",xpos:15,ypos:9,description:"Rare, used in lasers and electronics."},
+            {number:70,symbol:"Yb",name:"Ytterbium",category:"lanthanoid",xpos:16,ypos:9,description:"Used in lasers and materials science."},
+            {number:71,symbol:"Lu",name:"Lutetium",category:"lanthanoid",xpos:17,ypos:9,description:"Rare, used in catalysts and PET scans."},
+            {number:72,symbol:"Hf",name:"Hafnium",category:"transition metal",xpos:4,ypos:6,description:"Used in nuclear reactors and alloys."},
+            {number:73,symbol:"Ta",name:"Tantalum",category:"transition metal",xpos:5,ypos:6,description:"Corrosion-resistant, used in electronics."},
+            {number:74,symbol:"W",name:"Tungsten",category:"transition metal",xpos:6,ypos:6,description:"Highest melting point, used in bulbs and tools."},
+            {number:75,symbol:"Re",name:"Rhenium",category:"transition metal",xpos:7,ypos:6,description:"Rare, used in jet engines."},
+            {number:76,symbol:"Os",name:"Osmium",category:"transition metal",xpos:8,ypos:6,description:"Densest element, used in alloys."},
+            {number:77,symbol:"Ir",name:"Iridium",category:"transition metal",xpos:9,ypos:6,description:"Corrosion-resistant, used in spark plugs."},
+            {number:78,symbol:"Pt",name:"Platinum",category:"transition metal",xpos:10,ypos:6,description:"Precious metal, used in jewelry and catalysts."},
+            {number:79,symbol:"Au",name:"Gold",category:"transition metal",xpos:11,ypos:6,description:"Precious yellow metal, used in currency and jewelry."},
+            {number:80,symbol:"Hg",name:"Mercury",category:"transition metal",xpos:12,ypos:6,description:"Liquid metal at room temp, toxic, used in thermometers."},
+            {number:81,symbol:"Tl",name:"Thallium",category:"post-transition metal",xpos:13,ypos:6,description:"Toxic metal, used in electronics."},
+            {number:82,symbol:"Pb",name:"Lead",category:"post-transition metal",xpos:14,ypos:6,description:"Heavy, toxic metal, used in batteries."},
+            {number:83,symbol:"Bi",name:"Bismuth",category:"post-transition metal",xpos:15,ypos:6,description:"Least toxic heavy metal, used in medicines."},
+            {number:84,symbol:"Po",name:"Polonium",category:"metalloid",xpos:16,ypos:6,description:"Radioactive, discovered by Marie Curie."},
+            {number:85,symbol:"At",name:"Astatine",category:"metalloid",xpos:17,ypos:6,description:"Rare radioactive halogen."},
+            {number:86,symbol:"Rn",name:"Radon",category:"noble gas",xpos:18,ypos:6,description:"Radioactive noble gas, health hazard."},
+            {number:87,symbol:"Fr",name:"Francium",category:"alkali metal",xpos:1,ypos:7,description:"Extremely rare, highly radioactive alkali metal."},
+            {number:88,symbol:"Ra",name:"Radium",category:"alkaline earth metal",xpos:2,ypos:7,description:"Radioactive, once used in glow-in-the-dark paint."},
+            {number:89,symbol:"Ac",name:"Actinium",category:"actinoid",xpos:3,ypos:10,description:"Radioactive, used in cancer treatment research."},
+            {number:90,symbol:"Th",name:"Thorium",category:"actinoid",xpos:4,ypos:10,description:"Radioactive, potential nuclear fuel."},
+            {number:91,symbol:"Pa",name:"Protactinium",category:"actinoid",xpos:5,ypos:10,description:"Rare radioactive element."},
+            {number:92,symbol:"U",name:"Uranium",category:"actinoid",xpos:6,ypos:10,description:"Radioactive, used in nuclear power and weapons."},
+            {number:93,symbol:"Np",name:"Neptunium",category:"actinoid",xpos:7,ypos:10,description:"Radioactive, used in research."},
+            {number:94,symbol:"Pu",name:"Plutonium",category:"actinoid",xpos:8,ypos:10,description:"Radioactive, used in nuclear weapons and reactors."},
+            {number:95,symbol:"Am",name:"Americium",category:"actinoid",xpos:9,ypos:10,description:"Used in smoke detectors."},
+            {number:96,symbol:"Cm",name:"Curium",category:"actinoid",xpos:10,ypos:10,description:"Radioactive, used in space probes."},
+            {number:97,symbol:"Bk",name:"Berkelium",category:"actinoid",xpos:11,ypos:10,description:"Synthetic radioactive element."},
+            {number:98,symbol:"Cf",name:"Californium",category:"actinoid",xpos:12,ypos:10,description:"Used in neutron sources."},
+            {number:99,symbol:"Es",name:"Einsteinium",category:"actinoid",xpos:13,ypos:10,description:"Synthetic, named after Einstein."},
+            {number:100,symbol:"Fm",name:"Fermium",category:"actinoid",xpos:14,ypos:10,description:"Synthetic radioactive element."},
+            {number:101,symbol:"Md",name:"Mendelevium",category:"actinoid",xpos:15,ypos:10,description:"Synthetic, named after Mendeleev."},
+            {number:102,symbol:"No",name:"Nobelium",category:"actinoid",xpos:16,ypos:10,description:"Synthetic, named after Alfred Nobel."},
+            {number:103,symbol:"Lr",name:"Lawrencium",category:"actinoid",xpos:17,ypos:10,description:"Synthetic, named after Ernest Lawrence."},
+            {number:104,symbol:"Rf",name:"Rutherfordium",category:"transition metal",xpos:4,ypos:7,description:"Synthetic, named after Rutherford."},
+            {number:105,symbol:"Db",name:"Dubnium",category:"transition metal",xpos:5,ypos:7,description:"Synthetic, named after Dubna."},
+            {number:106,symbol:"Sg",name:"Seaborgium",category:"transition metal",xpos:6,ypos:7,description:"Synthetic, named after Glenn Seaborg."},
+            {number:107,symbol:"Bh",name:"Bohrium",category:"transition metal",xpos:7,ypos:7,description:"Synthetic, named after Niels Bohr."},
+            {number:108,symbol:"Hs",name:"Hassium",category:"transition metal",xpos:8,ypos:7,description:"Synthetic, named after Hesse, Germany."},
+            {number:109,symbol:"Mt",name:"Meitnerium",category:"unknown",xpos:9,ypos:7,description:"Synthetic, named after Lise Meitner."},
+            {number:110,symbol:"Ds",name:"Darmstadtium",category:"unknown",xpos:10,ypos:7,description:"Synthetic, named after Darmstadt, Germany."},
+            {number:111,symbol:"Rg",name:"Roentgenium",category:"unknown",xpos:11,ypos:7,description:"Synthetic, named after Wilhelm Roentgen."},
+            {number:112,symbol:"Cn",name:"Copernicium",category:"transition metal",xpos:12,ypos:7,description:"Synthetic, named after Copernicus."},
+            {number:113,symbol:"Nh",name:"Nihonium",category:"post-transition metal",xpos:13,ypos:7,description:"Synthetic, named after Japan (Nihon)."},
+            {number:114,symbol:"Fl",name:"Flerovium",category:"post-transition metal",xpos:14,ypos:7,description:"Synthetic, named after Flerov Laboratory."},
+            {number:115,symbol:"Mc",name:"Moscovium",category:"post-transition metal",xpos:15,ypos:7,description:"Synthetic, named after Moscow."},
+            {number:116,symbol:"Lv",name:"Livermorium",category:"post-transition metal",xpos:16,ypos:7,description:"Synthetic, named after Livermore Lab."},
+            {number:117,symbol:"Ts",name:"Tennessine",category:"metalloid",xpos:17,ypos:7,description:"Synthetic, named after Tennessee."},
+            {number:118,symbol:"Og",name:"Oganesson",category:"noble gas",xpos:18,ypos:7,description:"Synthetic, heaviest known element, named after Oganessian."}
+        ];
+
+        const table = document.getElementById("table");
+        const tooltip = document.getElementById("tooltip");
+
+        elements.forEach(el => {
+            const div = document.createElement("div");
+            
+            div.className = `element p-0.5 sm:p-1 md:p-2 rounded-md text-center cursor-pointer text-gray-800 ${categories[el.category] || 'unknown'}`;
+            div.style.gridColumn = el.xpos;
+            div.style.gridRow = el.ypos;
+            div.innerHTML = `
+                <div class="text-[9px] sm:text-xs font-medium text-gray-600">${el.number}</div>
+                <div class="text-base sm:text-lg md:text-xl font-bold">${el.symbol}</div>
+                <div class="text-[8px] sm:text-[10px] md:text-xs truncate">${el.name}</div>
+            `;
+
+            div.addEventListener("mouseenter", e => {
+                tooltip.style.display = "block";
+                tooltip.innerHTML = `
+                    <div class="font-bold text-lg">${el.name} (${el.symbol})</div>
+                    <div class="text-sm text-gray-600 capitalize">${el.category}</div>
+                    <p class="text-xs text-gray-800 mt-2">${el.description}</p>
+                `;
+            });
+
+            div.addEventListener("mousemove", e => {
+                
+                tooltip.style.left = e.pageX + 15 + "px";
+                tooltip.style.top = e.pageY + 15 + "px";
+            });
+
+            div.addEventListener("mouseleave", () => {
+                tooltip.style.display = "none";
+            });
+            
+            table.appendChild(div);
+        });
+    </script>
+</body>
+</html>
+
