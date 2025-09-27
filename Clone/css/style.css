@@ -1,0 +1,145 @@
+/* Basic Resets and Variables */
+:root {
+    --primary-color: #007BFF;
+    --secondary-color: #f4f4f4;
+    --text-color: #333;
+    --header-bg: #fff;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+    background-color: #fff;
+    color: var(--text-color);
+}
+
+.container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* Header and Navigation Bar */
+.main-header {
+    background: var(--header-bg);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    padding: 1rem 0;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.main-header .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    font-size: 1.5rem;
+    font-weight: bold;
+    text-decoration: none;
+    color: var(--primary-color);
+}
+
+.nav-menu {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex; /* Flexbox for nav items */
+}
+
+.nav-menu li {
+    margin-left: 20px;
+}
+
+.nav-menu a {
+    text-decoration: none;
+    color: var(--text-color);
+    font-weight: bold;
+    transition: color 0.3s ease;
+}
+
+.nav-menu a:hover {
+    color: var(--primary-color);
+}
+
+/* Checkbox Hack for Mobile Menu */
+#menu-toggle {
+    display: none; /* Hide the checkbox */
+}
+
+.menu-icon {
+    display: none; /* Hide hamburger icon on desktop */
+    font-size: 28px;
+    cursor: pointer;
+}
+
+/* Main Content Styling */
+.hero-section {
+    background-color: var(--primary-color);
+    color: #fff;
+    text-align: center;
+    padding: 60px 0;
+}
+
+.features-section {
+    padding: 40px 0;
+}
+
+.grid-container {
+    display: grid; /* CSS Grid for card layout */
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+}
+
+.feature-card {
+    background: var(--secondary-color);
+    padding: 20px;
+    border-radius: 5px;
+    text-align: center;
+}
+
+/* Footer Styling */
+.main-footer {
+    background: var(--text-color);
+    color: #fff;
+    text-align: center;
+    padding: 20px 0;
+    margin-top: 40px;
+}
+
+/* Responsive Design using Media Queries */
+@media (max-width: 768px) {
+    .menu-icon {
+        display: block; /* Show hamburger icon on mobile */
+    }
+
+    .nav-menu {
+        display: none; /* Hide the menu by default on mobile */
+        position: absolute;
+        top: 100%;
+        left: 0;
+        width: 100%;
+        background-color: var(--header-bg);
+        flex-direction: column;
+        text-align: center;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+
+    .nav-menu li {
+        margin: 0;
+    }
+
+    .nav-menu a {
+        display: block;
+        padding: 15px;
+        border-bottom: 1px solid #eee;
+    }
+    
+    /* When checkbox is checked, show the mobile menu */
+    #menu-toggle:checked ~ .nav-menu {
+        display: flex;
+    }
+}
