@@ -1,0 +1,71 @@
+.app-container {
+  max-width: 720px;
+  margin: 40px auto;
+  padding: 32px;
+  border-radius: 16px;
+  background: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);
+  box-shadow: 0 12px 32px rgba(15, 23, 42, 0.12);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #1e293b;
+}
+
+.app-header {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.app-header h1 {
+  margin-bottom: 8px;
+  font-size: 1.8rem;
+}
+
+.app-subtitle {
+  margin: 0;
+  font-size: 1rem;
+  color: #475569;
+}
+
+.task-card {
+  background-color: #ffffff;
+  border-radius: 12px;
+  padding: 24px;
+  margin-bottom: 20px;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+  border: 1px solid rgba(148, 163, 184, 0.25);
+}
+
+.task-card h2 {
+  margin-top: 0;
+  margin-bottom: 16px;
+  font-size: 1.4rem;
+  color: #0f172a;
+}
+
+.task-card button {
+  padding: 10px 18px;
+  border-radius: 999px;
+  border: none;
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  color: #ffffff;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.1s ease, box-shadow 0.2s ease;
+}
+
+.task-card button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 16px 24px rgba(99, 102, 241, 0.25);
+}
+
+.task-card input[type='text'] {
+  margin-left: 12px;
+  padding: 10px 14px;
+  border-radius: 8px;
+  border: 1px solid #cbd5f5;
+  min-width: 200px;
+  font-size: 1rem;
+}
+
+.task-card p {
+  margin: 12px 0 0;
+}
