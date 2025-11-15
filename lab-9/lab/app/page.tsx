@@ -1,10 +1,6 @@
-import ProtectedLayout from "./(protected)/layout";
-import HomePage from "./(protected)/page";
+import { redirect } from 'next/navigation'
 
-export default async function RootPage() {
-	return (
-		<ProtectedLayout>
-			<HomePage />
-		</ProtectedLayout>
-	);
+export default function HomePage() {
+  // Redirect users from the homepage (/) to your main dashboard
+  redirect('/main')
 }
