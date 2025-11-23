@@ -1,0 +1,1 @@
+Sample data file for Lab 10\nThis is the contents of data.txt\n

@@ -1,0 +1,11 @@
+{
+  "name": "lab10-node-fs",
+  "version": "1.0.0",
+  "description": "Lab 10 Node.js examples for file system, modules and system operations",
+  "main": "q1_task_a.js",
+  "scripts": {
+    "start": "node q1_task_a.js"
+  },
+  "author": "",
+  "license": "MIT"
+}
